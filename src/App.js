@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Nav from "./components/nav/Nav";
+import SignIn from "./pages/SignIn/SignIn";
+import SignUp from "./pages/signup/SignUp";
+import CustomUserContext from "./context/userAuthentication";
+import CustomProductContext from "./context/productState";
+import Products from "./pages/products/products";
+import MyOrder from "./pages/orders/myOrder";
+import Cart from "./pages/cart/Cart";
 function App() {
+  const browserRouter = createBrowserRouter([
+    {
+      path: '/',
+      element: <Nav />,
+      children: [
+        {index:true,element:<Products/>},
+        {path:'/signin',element:<SignIn/>},
+        {path:'/signup',element:<SignUp/>},
+        {path:'/myOrders',element:<MyOrder/>},
+        {path:'/cart',element:<Cart/>},
+      ]
+    }
+  ])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <CustomUserContext>
+      <CustomProductContext>
+
+      <RouterProvider router={browserRouter} />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false}
+                      newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss
+                      draggable pauseOnHover />
+      </CustomProductContext>
+   
+    </CustomUserContext>
+     
+    </>
   );
 }
 
