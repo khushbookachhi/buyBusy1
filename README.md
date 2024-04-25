@@ -1,4 +1,4 @@
-# BuyBusy2 React Shopping App
+# BuyBusy1 React Shopping App
 
 ## User Authentication
 * user signUp , signIn and signout is handled by firebase authentication helps user to authenticate while performing any functionality.
