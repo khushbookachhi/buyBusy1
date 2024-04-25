@@ -2,23 +2,28 @@
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 import { createContext, useState,useContext, useEffect } from "react";
 import {toast } from 'react-toastify';
-const userContext=createContext();
-// custom hook 
-function useValue(){
-    const value=useContext(userContext);
+// Create a context for user authentication
+const userContext = createContext();
+
+// Custom hook to access the user authentication context
+function useValue() {
+    const value = useContext(userContext);
     return value;
 }
-//Component
+// Component responsible for managing user authentication state and functionality
 function CustomUserContext({children}){
+     // State variables for user information
     const [name,setName]=useState("");
     const [email,setEmail]=useState("");
     const [password,setPassword]=useState("");
     const [user,setUser]=useState(null);
+    // Firebase Auth instance
     const auth = getAuth();
    
 useEffect(()=>{
     console.log("user Id authentication",user);
 },[user])
+ // Function to validate input for sign-up
     function isValidInput(name,email,password){
      const emailRegex =/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
 
@@ -30,6 +35,7 @@ useEffect(()=>{
         return false;
      }
     }
+    // Function to handle sign-up form submission
      function signUpOnSubmit(navigate){
         const isValid=isValidInput(name,email,password);
         if(isValid){
@@ -61,6 +67,7 @@ useEffect(()=>{
         }
        
      }
+    // Function to handle authentication state change
      function checkAuthState(){
         console.log("checkAuthState is called");
         onAuthStateChanged(auth,(userInfo)=>{
@@ -76,6 +83,7 @@ useEffect(()=>{
         })
        
      }
+      // Function to handle sign-in form submission
      function signInOnSubmit(navigate){
        
        signInWithEmailAndPassword(auth,email,password)
@@ -89,6 +97,7 @@ useEffect(()=>{
        })
       
      }
+       // Function to handle sign-out
      function signOutHandled(){
       
         signOut(auth).then(()=>{
@@ -98,9 +107,11 @@ useEffect(()=>{
             toast.error(error.message);
         })
      }
+      // Function to trigger sign-out
      function handleSignOut(){
         signOutHandled();
      }
+      // Provide context value to children components
      return(
         <userContext.Provider value={{name,setName,email,setEmail,password,setPassword,
         signUpOnSubmit,signInOnSubmit,handleSignOut,user,setUser}}>
@@ -108,5 +119,6 @@ useEffect(()=>{
         </userContext.Provider>
      )
 }
+// Export context, hook, and component for use in other components
 export {userContext,useValue};
 export default CustomUserContext;

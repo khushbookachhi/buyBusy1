@@ -10,13 +10,18 @@ import { toast } from 'react-toastify';
 
   
 function Cart(){
-    const {cartItems,addTotalPrice,loading,totalPrice,path,setPath}=productValue();
-    const {user,setUser}=useValue();
-    const location=useLocation();
-    const [isEmpty,setIsEmpty]=useState(false);
+    // Accessing product state context
+    const { cartItems, addTotalPrice, loading, totalPrice, path, setPath } = productValue();
+    // Accessing user authentication context
+    const { user, setUser } = useValue();
+    // Accessing the current location object from react-router-dom
+    const location = useLocation();
+    // State to manage if the cart is empty or not
+    const [isEmpty, setIsEmpty] = useState(false);
     
 
     useEffect(()=>{
+       // Retrieve user data from local storage if available
       const storedUser=localStorage.getItem('user');
       if(storedUser){
           setUser(storedUser);
@@ -24,15 +29,18 @@ function Cart(){
   },[setUser])
   
     useEffect(()=>{
+        // Update the current path when location changes
         setPath(location.pathname);
         // eslint-disable-next-line
       },[setPath]);
 
       useEffect(()=>{
+       // Calculate and add total price when cart items change
         addTotalPrice(cartItems);
         // eslint-disable-next-line 
     },[cartItems])
    useEffect(()=>{
+     // Check if cart is empty and show error toast if it is
     if(!cartItems.length){
       setIsEmpty(true);
     }else{
@@ -44,13 +52,11 @@ function Cart(){
    },[cartItems.length,isEmpty])
     return(
         <>
-        
-          
-        
         <div className='container d-flex justify-content-center'>{loading?<Loader/>:null}</div>
       <div className="container-fluid d-flex justify-content-around bg-white">
-     
+       {/* Display total price if available and not loading */}
         {totalPrice && !loading?<TotalPrice cartItems={cartItems} userId={user} totalPrice={totalPrice}/>:null}
+         {/* Display cart items */}
         <div className={`${style.product_container} d-flex py-5 my-2 bg-white`}>
           {!loading && cartItems?cartItems.map((item,index)=>{
                return (
